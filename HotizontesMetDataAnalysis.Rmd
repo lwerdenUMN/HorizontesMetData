@@ -20,6 +20,7 @@ library(lubridate)
 
 
 ```{r}
+# bulk 
 # read in data
 metData <- read.table("/Users/Leland/Dropbox/R/HorizontesMetData/data/Horizontes_MET_toMay28_2015.csv", header=TRUE, sep=",")
 
