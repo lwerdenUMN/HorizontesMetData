@@ -1,0 +1,71 @@
+---
+title: "HorizontesMetData"
+output: html_document 
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r, echo=FALSE}
+# load packages
+require(dplyr)
+require(ggplot2)
+require(wesanderson)
+require(aod)
+require(scales)
+library(lubridate)
+```
+
+
+
+```{r}
+# read in data
+metData <- read.table("/Users/Leland/Dropbox/R/HorizontesMetData/data/Horizontes_MET_toMay28_2015.csv", header=TRUE, sep=",")
+
+# replace "/"" with "-"" to read as date -- not necessary
+# metData[,2] <- gsub("/", "-", metData[,2])
+
+# using lubridate package to extract times from logger readout
+date <- mdy_hm(metData[,2], tz = "America/Costa_Rica")
+# add to data frame
+metData <- cbind(metData, date)
+# convert to just year and month
+metData$dateShort <- strftime(metData$date, format = "%Y-%m")
+
+```
+
+
+```{r}
+
+# uses dplyr to calculate total precip for each month to date
+# dplyr tutorial: http://cran.rstudio.com/web/packages/dplyr/vignettes/introduction.htm
+
+# precip summary - if package "plyr is attached this does not work!!!
+precipSummary <- metData %>% 
+                 group_by(dateShort) %>% 
+                 summarize(precipSum=sum(Rain_mm))
+                              
+
+
+
+```
+
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+## FIGURES
+# plot monthly precip. startig in August 2014
+# Possibly change x axis labels? or plot months next to each other once there is overlap?
+ggplot(data=precipSummary, aes(x=dateShort, y=precipSum)) +
+    geom_bar(stat="identity")+
+    geom_text(aes(label = precipSum), vjust=-.5, position = position_dodge(0.9), size = 6)+
+    scale_y_continuous(expand = c(0,0), limits = c(0, 410))+
+    xlab("Month")+
+    ylab("Precipitation (mm)")
+
+```
+
