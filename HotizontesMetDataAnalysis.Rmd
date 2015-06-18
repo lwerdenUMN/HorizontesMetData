@@ -22,7 +22,7 @@ library(lubridate)
 ```{r}
 # bulk 
 # read in data
-metData <- read.table("/Users/Leland/Dropbox/R/HorizontesMetData/data/Horizontes_MET_toMay28_2015.csv", header=TRUE, sep=",")
+metData <- read.table("/Users/Leland/Dropbox/R/HorizontesMetData/data/Horizontes_MET_ALL.csv", header=TRUE, sep=",")
 
 # replace "/"" with "-"" to read as date -- not necessary
 # metData[,2] <- gsub("/", "-", metData[,2])
